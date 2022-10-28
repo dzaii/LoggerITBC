@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class LogController {
     }
 
     @PostMapping("/api/logs/create")
-    public ResponseEntity createLog(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Log log) {
+    public ResponseEntity createLog(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,@Valid @RequestBody Log log) {
         System.out.println(token);
         if(this.logService.createLog(token,log)){
             return ResponseEntity.status(HttpStatus.OK).body("Created log!");

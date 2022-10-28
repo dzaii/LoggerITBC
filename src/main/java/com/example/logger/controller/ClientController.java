@@ -1,5 +1,6 @@
 package com.example.logger.controller;
 
+import com.example.logger.dto.ClientLoginDto;
 import com.example.logger.model.Client;
 import com.example.logger.model.enums.ClientRole;
 import com.example.logger.repository.ClientRepository;
@@ -44,9 +45,9 @@ public class ClientController {
     }
 
     @PostMapping("/api/clients/login")
-    public ResponseEntity loginUser(@RequestBody Map<String,String> requestParams) throws Exception{
-        String account=requestParams.get("account");
-        String password=requestParams.get("password");
+    public ResponseEntity loginUser(@RequestBody @ Valid ClientLoginDto clientLoginDto){
+        String account= clientLoginDto.getAccount();
+        String password= clientLoginDto.getPassword();
 
         if(!clientService.login(account,password).isEmpty()){
         return ResponseEntity.status(HttpStatus.OK).body("token : " + clientService.login(account,password));
