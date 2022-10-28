@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +28,6 @@ public class LogController {
 
     @PostMapping("/api/logs/create")
     public ResponseEntity createLog(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,@Valid @RequestBody Log log) {
-        System.out.println(token);
         if(this.logService.createLog(token,log)){
             return ResponseEntity.status(HttpStatus.OK).body("Created log!");
         }
@@ -38,8 +39,12 @@ public class LogController {
                                      @RequestParam(required = false)@DateTimeFormat(pattern = DATE_PATTERN) Date dateTo,
                                      @RequestParam(required = false)String message,
                                      @RequestParam(required = false)Integer logType) {
+
+        System.out.println(token);
         if (logService.findClientByToken(token) != null) {
-            return logService.getFiltered(logService.findClientByToken(token), dateFrom, dateTo, message, logType);
+            System.out.println("Goes in");
+            Client client = logService.findClientByToken(token);
+            return logService.getFiltered(client, dateFrom, dateTo, message, logType);
         }
         return null;
     }

@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -54,7 +55,6 @@ public class LogService {
             @Override
             public Predicate toPredicate(Root<Log> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
                 Predicate p = cb.conjunction();
-                if(Objects.nonNull(client))
                     p = cb.and(p, cb.equal(root.get("client"),client));
                 if(Objects.nonNull(dateFrom) && Objects.nonNull(dateTo) && dateFrom.before(dateTo)){
                     p = cb.and(p, cb.between(root.get("createdDate"),dateFrom,dateTo));
