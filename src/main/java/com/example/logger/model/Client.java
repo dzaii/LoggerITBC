@@ -1,12 +1,10 @@
 package com.example.logger.model;
-
 import com.example.logger.model.enums.ClientRole;
-import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.UUID;
 
 @Data
@@ -18,8 +16,15 @@ public class Client {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long clientId;
+    @NotNull
+    @Size(min = 3,message = "Username must be at least 3 characters long.")
     private String username;
+    @NotBlank
+    @Email
     private String email;
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+            message = "Password must contain at least: 8 characters, one upper Case letter," +
+                    " one lower case letter, one number and one special character.")
     private String password;
     private ClientRole role;
     private String token;
