@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +27,9 @@ public class ClientController {
         this.clientService= clientService;
     }
 
-    @GetMapping("/api/clients/all")
-    public List<Client> allClients() {
-        return clientRepository.findAll();
+    @GetMapping("/api/clients")
+    public ResponseEntity<?> allClients(){
+        return ResponseEntity.status(HttpStatus.OK).body(clientService.allClients());
     }
 
     @PostMapping("/api/clients/register")
