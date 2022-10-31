@@ -18,7 +18,6 @@ public interface LogRepository extends JpaRepository<Log,Integer>, JpaSpecificat
 
     List<Log> findByClient(Client client);
 
-    @Query(value = ":query", nativeQuery = true)
-    List<Log> getFilteredLogs(@Param("query") String filter);
+
 
 }

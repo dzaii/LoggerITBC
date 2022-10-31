@@ -1,6 +1,6 @@
 package com.example.logger.service;
 
-import antlr.StringUtils;
+import com.example.logger.dto.LogShowDto;
 import com.example.logger.model.Client;
 import com.example.logger.model.Log;
 import com.example.logger.repository.ClientRepository;
@@ -13,8 +13,8 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LogService {
@@ -29,28 +29,28 @@ public class LogService {
     }
 
     public boolean createLog(String token, Log log){
-        if(clientRepository.findByToken(token).isPresent()){
-            log.setClient(clientRepository.findByToken(token).get());
+        if(clientRepository.findByMyToken(token).isPresent()){
+            log.setClient(clientRepository.findByMyToken(token).get());
             logRepository.save(log);
             return true;
         }
         return false;
     }
     public List<Log> findAllForClient(String token) {
-        if (clientRepository.findByToken(token).isPresent()) {
-            Client client = clientRepository.findByToken(token).get();
+        if (clientRepository.findByMyToken(token).isPresent()) {
+            Client client = clientRepository.findByMyToken(token).get();
             return logRepository.findByClient(client);
         }
         return null;
     }
     public Client findClientByToken(String token){
-        if(clientRepository.findByToken(token).isPresent()) {
-            return clientRepository.findByToken(token).get();
+        if(clientRepository.findByMyToken(token).isPresent()) {
+            return clientRepository.findByMyToken(token).get();
         }
         return null;
     }
 
-    public List<Log> getFiltered(Client client, Date dateFrom, Date dateTo, String message, Integer logType) {
+    public List<LogShowDto> getFiltered(Client client, Date dateFrom, Date dateTo, String message, Integer logType) {
         List<Log> logs = logRepository.findAll(new Specification<Log>() {
             @Override
             public Predicate toPredicate(Root<Log> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
@@ -69,6 +69,6 @@ public class LogService {
                 return p;
             }
         });
-        return logs;
+        return logs.stream().map(log -> LogShowDto.logToLogShow(log)).collect(Collectors.toList());
     }
 }

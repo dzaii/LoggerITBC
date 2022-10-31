@@ -27,11 +27,11 @@ public class Client {
                     " one lower case letter, one number and one special character.")
     private String password;
     private ClientRole role;
-    private String token;
+    private String myToken;
     @PrePersist
     private void setUserRoleAndToken(){
         this.setRole(ClientRole.USER);
-        this.setToken(UUID.randomUUID().toString());
+        this.setMyToken(UUID.randomUUID().toString());
         }
 
 }

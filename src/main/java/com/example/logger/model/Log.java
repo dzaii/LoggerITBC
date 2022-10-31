@@ -22,6 +22,7 @@ public class Log {
     private long logId;
     @Size(max = 1024, message = "Log must be less than 1024 characters long.")
     private String message;
+    @Enumerated(value = EnumType.ORDINAL)
     private LogType logType;
     private Date createdDate;
 

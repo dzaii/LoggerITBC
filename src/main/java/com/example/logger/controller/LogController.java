@@ -1,5 +1,6 @@
 package com.example.logger.controller;
 
+import com.example.logger.dto.LogShowDto;
 import com.example.logger.model.Client;
 import com.example.logger.model.Log;
 import com.example.logger.repository.LogRepository;
@@ -34,18 +35,17 @@ public class LogController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
     }
     @GetMapping("/api/logs/search")
-    public List<Log> findAllFiltered(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                     @RequestParam(required = false)@DateTimeFormat(pattern = DATE_PATTERN) Date dateFrom,
-                                     @RequestParam(required = false)@DateTimeFormat(pattern = DATE_PATTERN) Date dateTo,
-                                     @RequestParam(required = false)String message,
-                                     @RequestParam(required = false)Integer logType) {
+    public ResponseEntity<?> findAllFiltered(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                                            @RequestParam(required = false)@DateTimeFormat(pattern = DATE_PATTERN) Date dateFrom,
+                                                            @RequestParam(required = false)@DateTimeFormat(pattern = DATE_PATTERN) Date dateTo,
+                                                            @RequestParam(required = false)String message,
+                                                            @RequestParam(required = false)Integer logType) {
 
         System.out.println(token);
         if (logService.findClientByToken(token) != null) {
-            System.out.println("Goes in");
             Client client = logService.findClientByToken(token);
-            return logService.getFiltered(client, dateFrom, dateTo, message, logType);
+            return ResponseEntity.status(HttpStatus.OK).body(logService.getFiltered(client, dateFrom, dateTo, message, logType));
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
     }
 }
