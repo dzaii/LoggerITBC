@@ -1,13 +1,16 @@
 package com.example.logger.model;
 import com.example.logger.model.enums.ClientRole;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "client")
@@ -29,9 +32,9 @@ public class Client {
     private ClientRole role;
     private String myToken;
     @PrePersist
-    private void setUserRoleAndToken(){
-        this.setRole(ClientRole.USER);
+    private void setUserToken(){
         this.setMyToken(UUID.randomUUID().toString());
         }
+
 
 }

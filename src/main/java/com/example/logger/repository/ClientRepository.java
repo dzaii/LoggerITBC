@@ -32,5 +32,10 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
     @Query(value = "SELECT TOP 1 u.myToken FROM client u WHERE u.clientId = :id", nativeQuery = true)
     String getClientToken(@Param("id") long x);
 
+    @Transactional
+    @Modifying
+    @Query("update Client u set u.role = 1 where u.clientId = :id")
+    void setAdminRole(@Param("id") long x);
+
 
 }

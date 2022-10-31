@@ -6,6 +6,7 @@ import com.example.logger.model.enums.ClientRole;
 import com.example.logger.repository.ClientRepository;
 import com.example.logger.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,15 @@ public class ClientController {
     }
 
     @GetMapping("/api/clients")
-    public ResponseEntity<?> allClients(){
+    public ResponseEntity<?> allClients(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
+        ClientRole role = clientService.getRolefromToken(token);
+
+        if(role == null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token.");
+        }
+        if(role!= ClientRole.ADMIN){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correct token, but not admin");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(clientService.allClients());
     }
 
@@ -41,7 +50,7 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists.");
         }
 
-        clientRepository.save(client);
+        clientService.save(client);
         return ResponseEntity.status(HttpStatus.OK).body("Registered!");
     }
 
