@@ -23,8 +23,8 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
 
     Optional<Client> findByMyToken(String token);
 
-    @Query(value = "SELECT TOP 1 * FROM client u WHERE (u.username like :username OR u.email like :username) AND u.password like :password", nativeQuery = true)
-    Optional<Client> getClientLogin(@Param("username") String x, @Param("password") String y);
+    @Query(value = "SELECT TOP 1 * FROM client u WHERE (u.username like :username OR u.email like :username)", nativeQuery = true)
+    Optional<Client> getClientLogin(@Param("username") String x);
     @Transactional
     @Modifying
     @Query("update Client u set u.myToken = :token where u.clientId = :id")

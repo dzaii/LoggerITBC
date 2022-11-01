@@ -6,6 +6,10 @@ import com.example.logger.model.enums.ClientRole;
 import com.example.logger.repository.ClientRepository;
 import com.example.logger.repository.LogRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,23 +19,36 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Transactional
 public class ClientService {
 
     ClientRepository clientRepository;
     LogRepository logRepository;
 
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    ClientService(ClientRepository clientRepository,LogRepository logRepository){
+        this.clientRepository = clientRepository;
+        this.logRepository = logRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A,12);
+    }
+
 
     public void save(Client client){
         client.setRole(ClientRole.USER);
+        String encodedPassword = bCryptPasswordEncoder.encode(client.getPassword());
+        client.setPassword(encodedPassword);
         clientRepository.save(client);
     }
     public String login(String account, String password) {
-        Optional<Client> client = clientRepository.getClientLogin(account, password);
+
+        Optional<Client> client = clientRepository.getClientLogin(account);
         if (client.isPresent()) {
-            clientRepository.updateClientToken(UUID.randomUUID().toString(),client.get().getClientId());
-            return clientRepository.getClientToken(client.get().getClientId());
+            if(bCryptPasswordEncoder.matches(password,client.get().getPassword())) {
+                clientRepository.updateClientToken(UUID.randomUUID().toString(), client.get().getClientId());
+                return clientRepository.getClientToken(client.get().getClientId());
+            }
         }
             return "";
 
