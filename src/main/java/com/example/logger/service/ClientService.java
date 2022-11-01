@@ -72,7 +72,7 @@ public class ClientService {
     }
 
     public void setClientPassword(long id, String password){
-        clientRepository.setClientPassword(id,password);
+        clientRepository.setClientPassword(id,bCryptPasswordEncoder.encode(password));
     }
 
     public boolean passValid(String password){
