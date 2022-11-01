@@ -16,6 +16,7 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
     List<Client> findAll();
     boolean existsClientByUsername(String username);
     boolean existsClientByEmail(String email);
+    boolean existsClientByClientId(long id);
     Optional<Client> findByUsername(String username);
     Optional<Client> findByEmail(String email);
 
@@ -36,6 +37,11 @@ public interface ClientRepository extends JpaRepository<Client,Integer> {
     @Modifying
     @Query("update Client u set u.role = 1 where u.clientId = :id")
     void setAdminRole(@Param("id") long x);
+
+    @Transactional
+    @Modifying
+    @Query("update Client u set u.password = :password where u.clientId = :id")
+    void setClientPassword(@Param("id") long x,@Param("password") String password);
 
 
 }

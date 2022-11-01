@@ -1,14 +1,11 @@
 package com.example.logger.service;
 
-import antlr.StringUtils;
 import com.example.logger.dto.ClientShowDto;
 import com.example.logger.model.Client;
 import com.example.logger.model.enums.ClientRole;
 import com.example.logger.repository.ClientRepository;
 import com.example.logger.repository.LogRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +43,7 @@ public class ClientService {
                                                                     return clientShow;}).collect(Collectors.toList());
     }
 
-    public ClientRole getRolefromToken(String token){
+    public ClientRole getRoleFromToken(String token){
         if(clientRepository.findByMyToken(token).isPresent()) {
             return clientRepository.findByMyToken(token).get().getRole();
         }
@@ -55,5 +52,13 @@ public class ClientService {
 
     public void setRoleToAdmin(Client client){
         clientRepository.setAdminRole(client.getClientId());
+    }
+
+    public void setClientPassword(long id, String password){
+        clientRepository.setClientPassword(id,password);
+    }
+
+    public boolean passValid(String password){
+        return password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
     }
 }

@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.http.HttpResponse;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +28,7 @@ public class ClientController {
 
     @GetMapping("/api/clients")
     public ResponseEntity<?> allClients(@RequestHeader(HttpHeaders.AUTHORIZATION) String token){
-        ClientRole role = clientService.getRolefromToken(token);
+        ClientRole role = clientService.getRoleFromToken(token);
 
         if(role == null){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token.");
@@ -39,6 +37,29 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correct token, but not admin");
         }
         return ResponseEntity.status(HttpStatus.OK).body(clientService.allClients());
+    }
+
+    @PatchMapping("/api/clients/{clientId}/reset-password")
+    public ResponseEntity resetClientPassword(@PathVariable("clientId") long clientId,@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Map<String,String> password){
+
+        ClientRole role = clientService.getRoleFromToken(token);
+
+        if(role == null){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid token.");
+        }
+        if(role!= ClientRole.ADMIN){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Correct token, but not admin");
+        }
+
+        if(!clientRepository.existsClientByClientId(clientId)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong client id.");
+        }
+        if(!clientService.passValid(password.get("password"))){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Password must contain at least: 8 characters, one upper Case letter," +
+                    " one lower case letter, one number and one special character.");
+        }
+        clientService.setClientPassword(clientId,password.get("password"));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Client password changed.");
     }
 
     @PostMapping("/api/clients/register")
