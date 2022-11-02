@@ -1,5 +1,6 @@
 package com.example.logger.controller;
 
+import com.example.logger.dto.LogCreateDto;
 import com.example.logger.dto.LogShowDto;
 import com.example.logger.model.Client;
 import com.example.logger.model.Log;
@@ -28,8 +29,8 @@ public class LogController {
     }
 
     @PostMapping("/api/logs/create")
-    public ResponseEntity createLog(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,@Valid @RequestBody Log log) {
-        if(this.logService.createLog(token,log)){
+    public ResponseEntity createLog(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @Valid @RequestBody LogCreateDto logCreateDto) {
+        if(this.logService.createLog(token,logCreateDto.logCreateToLog())){
             return ResponseEntity.status(HttpStatus.OK).body("Created log!");
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");

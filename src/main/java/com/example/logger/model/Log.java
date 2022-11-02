@@ -2,6 +2,8 @@ package com.example.logger.model;
 
 import com.example.logger.model.enums.ClientRole;
 import com.example.logger.model.enums.LogType;
+import com.example.logger.utils.enumValidation.ValueOfEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +15,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "log")
@@ -20,9 +23,8 @@ public class Log {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long logId;
-    @Size(max = 1024, message = "Log must be less than 1024 characters long.")
     private String message;
-    @Enumerated(value = EnumType.ORDINAL)
+    @Enumerated(EnumType.ORDINAL)
     private LogType logType;
     private Date createdDate;
 

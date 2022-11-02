@@ -19,12 +19,13 @@ public class Client {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long clientId;
-    @NotNull
+    @NotNull(message = "Username is required.")
     @Size(min = 3,message = "Username must be at least 3 characters long.")
     private String username;
-    @NotBlank
+    @NotBlank(message = "Email is required.")
     @Email
     private String email;
+    @NotNull(message = "Password is required.")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
             message = "Password must contain at least: 8 characters, one upper Case letter," +
                     " one lower case letter, one number and one special character.")
