@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.UUID;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication()
 public class LoggerApplication {
 
 	public static void main(String[] args) {
@@ -20,7 +20,7 @@ public class LoggerApplication {
 	@Bean
 	CommandLineRunner run(ClientService clientService){
 		return args -> {
-			Client client = new Client(0,"admin","admin@gmail.com","Password123!", ClientRole.ADMIN, UUID.randomUUID().toString());
+			Client client = new Client(0,"admin","admin@gmail.com","Password123!", ClientRole.ADMIN);
 			clientService.save(client);
 			clientService.setRoleToAdmin(client);
 

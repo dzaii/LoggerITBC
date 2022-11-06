@@ -6,10 +6,8 @@ import com.example.logger.utils.enumValidation.ValueOfEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 
 @Data
 @AllArgsConstructor
@@ -21,8 +19,8 @@ public class LogCreateDto {
     @ValueOfEnum(enumClass = LogType.class, message = "Incorrect log type.")
     private int logType;
 
-    public Log logCreateToLog(){
-        return new Log(0,this.getMessage(),LogType.values()[this.getLogType()], null,null);
+    public Log logCreateToLog() {
+        return new Log(0, this.getMessage(), LogType.values()[this.getLogType()], null, null);
     }
 
 }

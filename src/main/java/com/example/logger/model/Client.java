@@ -1,13 +1,12 @@
 package com.example.logger.model;
+
 import com.example.logger.model.enums.ClientRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -17,10 +16,10 @@ import java.util.UUID;
 public class Client {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long clientId;
     @NotNull(message = "Username is required.")
-    @Size(min = 3,message = "Username must be at least 3 characters long.")
+    @Size(min = 3, message = "Username must be at least 3 characters long.")
     private String username;
     @NotBlank(message = "Email is required.")
     @Email
@@ -31,11 +30,6 @@ public class Client {
                     " one lower case letter, one number and one special character.")
     private String password;
     private ClientRole role;
-    private String myToken;
-    @PrePersist
-    private void setUserToken(){
-        this.setMyToken(UUID.randomUUID().toString());
-        }
 
 
 }

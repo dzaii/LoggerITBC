@@ -1,11 +1,11 @@
 package com.example.logger.dto;
 
 import com.example.logger.model.Client;
-import com.example.logger.model.Log;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data @AllArgsConstructor
+@Data
+@AllArgsConstructor
 public class ClientShowDto {
 
     private long clientId;
@@ -13,7 +13,7 @@ public class ClientShowDto {
     private String email;
     private int logCount;
 
-    public static ClientShowDto clientToClientShow(Client client){
-        return new ClientShowDto(client.getClientId(),client.getUsername(),client.getEmail(),0);
+    public static ClientShowDto clientToClientShow(Client client) {
+        return new ClientShowDto(client.getClientId(), client.getUsername(), client.getEmail(), 0);
     }
 }

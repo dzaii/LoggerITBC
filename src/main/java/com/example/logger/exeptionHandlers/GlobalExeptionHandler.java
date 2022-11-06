@@ -11,8 +11,8 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExeptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<?> customValidationErrorHandling(MethodArgumentNotValidException exception){
-        ErrorDetails errorDetails = new ErrorDetails(new Date(),"Validation Error",
+    public ResponseEntity<?> customValidationErrorHandling(MethodArgumentNotValidException exception) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Validation Error",
                 exception.getBindingResult().getFieldError().getDefaultMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }

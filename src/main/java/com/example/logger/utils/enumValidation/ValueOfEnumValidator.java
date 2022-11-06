@@ -2,7 +2,6 @@ package com.example.logger.utils.enumValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,7 +14,6 @@ public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum,Int
                 .map(Enum::name)
                 .collect(Collectors.toList()).size();
     }
-
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
         if (value == null) {

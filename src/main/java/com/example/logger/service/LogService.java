@@ -27,25 +27,14 @@ public class LogService {
         this.clientRepository = clientRepository;
 
     }
-
-    public boolean createLog(String token, Log log){
-        if(clientRepository.findByMyToken(token).isPresent()){
-            log.setClient(clientRepository.findByMyToken(token).get());
+    public boolean createLog(Client client, Log log){
+            log.setClient(client);
             logRepository.save(log);
             return true;
-        }
-        return false;
     }
-    public List<Log> findAllForClient(String token) {
-        if (clientRepository.findByMyToken(token).isPresent()) {
-            Client client = clientRepository.findByMyToken(token).get();
-            return logRepository.findByClient(client);
-        }
-        return null;
-    }
-    public Client findClientByToken(String token){
-        if(clientRepository.findByMyToken(token).isPresent()) {
-            return clientRepository.findByMyToken(token).get();
+    public Client findClientByAccount(String account){
+        if(clientRepository.getClientLogin(account).isPresent()) {
+            return clientRepository.getClientLogin(account).get();
         }
         return null;
     }
