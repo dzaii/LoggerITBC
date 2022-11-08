@@ -41,7 +41,7 @@ public class ClientController {
 
         if (page == null) {
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create("http://localhost:8080/api/clients?page=0"));
+            headers.add("Location","/api/clients?page=0");
             return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
         }
         return ResponseEntity.status(HttpStatus.OK).body(clientService.allClients(page, 5));
