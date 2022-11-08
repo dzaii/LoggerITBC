@@ -22,21 +22,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private JwtAuthEntryPoint authEntryPoint;
-
+    private JWTAccessDeniedHandler accessDeniedHandler;
     private CustomUserDetailsService userDetailsService;
     @Autowired
-    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthEntryPoint authEntryPoint, CustomUserDetailsService userDetailsService, JWTAccessDeniedHandler accessDeniedHandler) {
         this.authEntryPoint = authEntryPoint;
         this.userDetailsService = userDetailsService;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint)
-                .and()
+                .exceptionHandling().authenticationEntryPoint(authEntryPoint).and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -66,4 +66,6 @@ public class SecurityConfig {
     public JWTAuthenticationFilter jwtAuthenticationFilter(){
         return new JWTAuthenticationFilter();
     };
+
+
 }
