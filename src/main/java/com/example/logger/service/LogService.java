@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,14 +41,31 @@ public class LogService {
     }
 
     public List<LogShowDto> getFiltered(Client client, Date dateFrom, Date dateTo, String message, Integer logType) {
+
+        if(Objects.isNull(dateFrom)){
+            Calendar cal = Calendar.getInstance();
+            cal.set(1,0,1);
+            dateFrom = cal.getTime();
+        }
+        if(Objects.isNull(dateTo)) {
+            dateTo = Calendar.getInstance().getTime();
+        }
+
+        Date finalDateFrom = dateFrom;
+        Date finalDateTo = dateTo;
+
         List<Log> logs = logRepository.findAll(new Specification<Log>() {
             @Override
             public Predicate toPredicate(Root<Log> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+
                 Predicate p = cb.conjunction();
                     p = cb.and(p, cb.equal(root.get("client"),client));
-                if(Objects.nonNull(dateFrom) && Objects.nonNull(dateTo) && dateFrom.before(dateTo)){
-                    p = cb.and(p, cb.between(root.get("createdDate"),dateFrom,dateTo));
+                if(finalDateFrom.before(finalDateTo)) {
+                    p = cb.and(p, cb.between(root.get("createdDate"), finalDateFrom, finalDateTo));
+                }else{
+                    p=cb.and(root.isNull());
                 }
+
                 if(message != null){
                     p = cb.and(p, cb.like(root.get("message"), "%" + message +"%"));
                 }

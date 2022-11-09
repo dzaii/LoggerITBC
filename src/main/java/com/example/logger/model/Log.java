@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.Date;
 
 @Data
@@ -30,6 +31,6 @@ public class Log {
 
     @PrePersist
     private void setLogDateTime() {
-        this.setCreatedDate(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)));
+        this.setCreatedDate(Calendar.getInstance().getTime());
     }
 }
